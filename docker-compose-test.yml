@@ -1,0 +1,15 @@
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/cgodecke/data2/mariadb
+      o: bind
+
+
+services:
+  test_service:
+    image: alpine
+    command: ls /data2/mariadb
+    volumes:
+      - mariadb:/data2/mariadb:ro

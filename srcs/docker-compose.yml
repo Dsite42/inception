@@ -1,0 +1,68 @@
+version: '3.8'
+
+networks:
+  own_network:
+    driver: bridge
+
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/cgodecke/data/mariadb
+      o: bind
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/cgodecke/data/wordpress
+      o: bind
+
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    env_file: .env
+    build: ./requirements/mariadb
+    restart: on-failure
+    #volumes:
+    #  - /home/cgodecke/data/mariadb:/var/lib/mysql:rw
+    volumes:
+      - mariadb:/var/lib/mysql:rw
+    networks:
+      - own_network
+
+  wordpress:
+    container_name: wordpress
+    image: wordpress
+    env_file: .env
+    build: ./requirements/wordpress
+    restart: on-failure
+    #volumes:
+    #  - /home/cgodecke/data/wordpress:/var/www/wordpress:rw
+    volumes:
+      - wordpress:/var/www/wordpress:rw
+    networks:
+      - own_network
+    depends_on:
+      - mariadb
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    env_file: .env
+    build:
+      context: ./requirements/nginx
+      args:
+        - DOMAIN_NAME=${DOMAIN_NAME}
+        - CERTS=${CERTS}
+    restart: on-failure
+    volumes:
+      - wordpress:/var/www/wordpress:rw
+    networks:
+      - own_network
+    ports:
+      - "443:443"
+    depends_on:
+      - wordpress
+
