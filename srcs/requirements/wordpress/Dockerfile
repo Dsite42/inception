@@ -8,10 +8,8 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 RUN chmod +x wp-cli.phar
 RUN mv wp-cli.phar /usr/local/bin/wp
 
-#RUN adduser -S www-data && adduser www-data www-data
 # Creates a new group and system user named www-data.
-RUN addgroup -S www-data && adduser -S -G www-data www-data
-
+RUN adduser -S www-data && adduser www-data www-data
 
 # Copy Config file
 COPY ./conf/www.conf /etc/php81/php-fpm.d/www.conf
