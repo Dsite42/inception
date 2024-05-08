@@ -21,7 +21,7 @@ clean:
 	- docker container rm $$(docker container ps -aq)
 	- docker image rm -f $$(docker image ls -aq)
 	- docker volume rm $$(docker volume ls -q)
-	- docker network rm $$(docker network ls -q)
+	- docker network rm $(shell docker network ls --filter type=custom -q)
 
 fclean: clean volume
 
