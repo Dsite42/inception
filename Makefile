@@ -6,8 +6,6 @@ all: $(NAME)
 $(NAME):
 	mkdir -p ~/data/wordpress
 	mkdir -p ~/data/mariadb
-#sudo chown cgodecke: /home/cgodecke/data
-#sudo chmod 755 /home/cgodecke/data
 	docker compose -f $(YML) up --build -d
 
 down:
